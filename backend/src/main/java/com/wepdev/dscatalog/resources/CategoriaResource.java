@@ -1,6 +1,8 @@
 package com.wepdev.dscatalog.resources;
 
 import com.wepdev.dscatalog.entities.Categoria;
+import com.wepdev.dscatalog.services.CategoriaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +15,15 @@ import java.util.List;
 @RequestMapping(value = "/categorias") // Rota do recurso
 public class CategoriaResource {
 
+    @Autowired
+    private CategoriaService service;
+
     /**
      * ResponseEntity<> -> Encapsula uma resposta HTTP, e o corpo da resposta
      */
     @GetMapping
     public ResponseEntity<List<Categoria>> findAll(){
-        List<Categoria> list = new ArrayList<>();
-        list.add(new Categoria(1L, "Livros"));
-        list.add(new Categoria(2L, "Eletronicos"));
-
+        List<Categoria> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
