@@ -3,6 +3,7 @@ package com.wepdev.dscatalog.services;
 import com.wepdev.dscatalog.dto.CategoriaDTO;
 import com.wepdev.dscatalog.entities.Categoria;
 import com.wepdev.dscatalog.repositories.CategoriaRepository;
+import com.wepdev.dscatalog.services.exceptions.EntidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,10 @@ public class CategoriaService {
     @Transactional(readOnly = true)
     public CategoriaDTO findById(Long id) {
         Optional<Categoria> obj = repository.findById(id); // O retorno dessa busca e um objeto Optional que nunca e nulo
-        Categoria entity = obj.get();
+        /*
+        Acessa o objeto que esta dentro Categoria, se ele nao existir lança a exception customizada
+         */
+        Categoria entity = obj.orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada"));
         return new CategoriaDTO(entity);
     }
 }
