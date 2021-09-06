@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,5 +66,23 @@ public class CategoriaService {
         entity.setNome(dto.getNome());
         entity = repository.save(entity);
         return new CategoriaDTO(entity);
+    }
+
+    @Transactional
+    public CategoriaDTO update(Long id ,CategoriaDTO dto) {
+        try {
+        /*
+        Instancia um objeto provisorio com os dados e o id, a vantagem disso e que ele nao acessa o banco de dados,
+        o que evita que ele acesse o banco para buscar e depois salvar
+         */
+            Categoria entity = repository.getOne(id);
+            entity.setNome(dto.getNome());
+            entity = repository.save(entity);
+
+            return new CategoriaDTO(entity);
+        }catch (EntityNotFoundException e){
+            throw new EntidadeNaoEncontradaException("Id não encontrado" + id);
+        }
+
     }
 }
