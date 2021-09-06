@@ -1,5 +1,6 @@
 package com.wepdev.dscatalog.resources;
 
+import com.wepdev.dscatalog.dto.CategoriaDTO;
 import com.wepdev.dscatalog.entities.Categoria;
 import com.wepdev.dscatalog.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class CategoriaResource {
      * ResponseEntity<> -> Encapsula uma resposta HTTP, e o corpo da resposta
      */
     @GetMapping
-    public ResponseEntity<List<Categoria>> findAll(){
-        List<Categoria> list = service.findAll();
+    public ResponseEntity<List<CategoriaDTO>> findAll(){
+        List<CategoriaDTO> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
