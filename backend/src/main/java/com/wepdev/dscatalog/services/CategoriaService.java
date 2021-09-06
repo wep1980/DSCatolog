@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service // Registra a classe como componente do sistema de injeção do Spring
@@ -45,5 +46,12 @@ public class CategoriaService {
 //            listDto.add(new CategoriaDTO(cat)); // Adicionando cada Categoria na lista de CategoriaDTO, existe um construtor na CategoriaDTO que recebe como argumento uma Categoria
 //        }
 //         return listDto;
+    }
+
+    @Transactional(readOnly = true)
+    public CategoriaDTO findById(Long id) {
+        Optional<Categoria> obj = repository.findById(id); // O retorno dessa busca e um objeto Optional que nunca e nulo
+        Categoria entity = obj.get();
+        return new CategoriaDTO(entity);
     }
 }
