@@ -58,4 +58,12 @@ public class CategoriaService {
         Categoria entity = obj.orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada"));
         return new CategoriaDTO(entity);
     }
+
+    @Transactional
+    public CategoriaDTO insert(CategoriaDTO dto) {
+        Categoria entity = new Categoria();
+        entity.setNome(dto.getNome());
+        entity = repository.save(entity);
+        return new CategoriaDTO(entity);
+    }
 }
