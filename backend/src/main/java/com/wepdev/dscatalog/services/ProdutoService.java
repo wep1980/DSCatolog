@@ -27,6 +27,9 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository repository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
     /**
      * Garante que o metodo vai executar em uma transaçao com o banco de dados.
      * readOnly = true -> Evita o locking(travamento com o banco de dodos) em opereções de leitura
@@ -87,9 +90,24 @@ public class ProdutoService {
     @Transactional
     public ProdutoDTO insert(ProdutoDTO dto) {
         Produto entity = new Produto();
-        //entity.setNome(dto.getNome());
+        copiaDtoParaEntidade(dto, entity);
         entity = repository.save(entity);
         return new ProdutoDTO(entity);
+    }
+
+    private void copiaDtoParaEntidade(ProdutoDTO dto, Produto entity) {
+        entity.setNome(dto.getNome());
+        entity.setDescricao(dto.getDescricao());
+        entity.setData(dto.getData());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setPreco(dto.getPreco());
+
+        entity.getCategorias().clear(); // limpa a lista de categoria caso tenha alguma lista dentro usada anteriormente
+        for(CategoriaDTO catDto : dto.getCategorias()){ // Percorrendo a lista de CategoriasDTO que existe dentro de ProdutoDTO
+            //Pegando cada elemento de categorias que esta dentro da lista por id e instanciando uma nova Categoria sem tocar no banco com getOne()
+            Categoria categoria = categoriaRepository.getOne(catDto.getId());
+            entity.getCategorias().add(categoria);
+        }
     }
 
 
@@ -101,7 +119,7 @@ public class ProdutoService {
         o que evita que ele acesse o banco para buscar e depois salvar
          */
             Produto entity = repository.getOne(id);
-            //entity.setNome(dto.getNome());
+            copiaDtoParaEntidade(dto, entity);
             entity = repository.save(entity);
 
             return new ProdutoDTO(entity);
