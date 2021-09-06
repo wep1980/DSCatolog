@@ -1,9 +1,6 @@
 package com.wepdev.dscatalog.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -11,9 +8,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-//@Data // Anotacao do LOMBOK que possui gets , sets , equals&HashCode e ToString
-//@Getter
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Habilita os campos explicidamente que serao utilizados no Equals e hashcode
+@Data // Anotacao do LOMBOK que possui gets , sets , equals&HashCode e ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Habilita os campos explicidamente que serao utilizados no Equals e hashcode
 @Entity
 @Table(name = "tb_categoria")
 public class Categoria implements Serializable {
@@ -25,9 +21,11 @@ public class Categoria implements Serializable {
 
     private String nome;
 
+    @Setter(value = AccessLevel.NONE) // Esse atributo não gera o set()
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE") // Sera armazenado no banco por padrão no horario UTC
     private Instant criadoEm;
 
+    @Setter(value = AccessLevel.NONE) // Esse atributo não gera o set()
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE") // Sera armazenado no banco por padrão no horario UTC
     private Instant atualizadoEm;
 
@@ -60,42 +58,4 @@ public class Categoria implements Serializable {
    }
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Instant getCriadoEm() {
-        return criadoEm;
-    }
-
-
-    public Instant getAtualizadoEm() {
-        return atualizadoEm;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Categoria categoria = (Categoria) o;
-        return Objects.equals(id, categoria.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
