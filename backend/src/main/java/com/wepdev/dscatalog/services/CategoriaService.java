@@ -8,6 +8,8 @@ import com.wepdev.dscatalog.services.exceptions.EntidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,22 @@ public class CategoriaService {
 //         return listDto;
     }
 
+
+    /**
+     * Como o Page ja e um stream nao e necessario colocar o stream() e o collect(Collectors.toList(),
+     * como no metodo do findAll() acima
+     * @param pageRequest
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Page<CategoriaDTO> findAllPaged(PageRequest pageRequest) {
+
+        Page<Categoria> list = repository.findAll(pageRequest);
+
+        return list.map(x -> new CategoriaDTO(x));
+    }
+
+
     @Transactional(readOnly = true)
     public CategoriaDTO findById(Long id) {
         Optional<Categoria> obj = repository.findById(id); // O retorno dessa busca e um objeto Optional que nunca e nulo
@@ -63,6 +81,7 @@ public class CategoriaService {
         return new CategoriaDTO(entity);
     }
 
+
     @Transactional
     public CategoriaDTO insert(CategoriaDTO dto) {
         Categoria entity = new Categoria();
@@ -70,6 +89,7 @@ public class CategoriaService {
         entity = repository.save(entity);
         return new CategoriaDTO(entity);
     }
+
 
     @Transactional
     public CategoriaDTO update(Long id ,CategoriaDTO dto) {
@@ -86,8 +106,8 @@ public class CategoriaService {
         }catch (EntityNotFoundException e){
             throw new EntidadeNaoEncontradaException("Id não encontrado " + id);
         }
-
     }
+
 
     /**
      * Nao foi colocado o @Transactional para poder ser capturada excessao vinda do banco de dados
@@ -104,4 +124,6 @@ public class CategoriaService {
         }
 
     }
+
+
 }
