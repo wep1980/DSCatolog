@@ -99,7 +99,7 @@ public class CategoriaService {
         }catch (EmptyResultDataAccessException e){
             throw new EntidadeNaoEncontradaException("Id não encontrado " + id);
         }catch (DataIntegrityViolationException e){
-            throw new EntidadeEmUsoException("Entidade com id" + id + "em uso");
+            throw new EntidadeEmUsoException("Entidade com id em uso" + id);
 
         }
 
