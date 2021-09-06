@@ -3,8 +3,11 @@ package com.wepdev.dscatalog.services;
 import com.wepdev.dscatalog.dto.CategoriaDTO;
 import com.wepdev.dscatalog.entities.Categoria;
 import com.wepdev.dscatalog.repositories.CategoriaRepository;
+import com.wepdev.dscatalog.services.exceptions.EntidadeEmUsoException;
 import com.wepdev.dscatalog.services.exceptions.EntidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +84,23 @@ public class CategoriaService {
 
             return new CategoriaDTO(entity);
         }catch (EntityNotFoundException e){
-            throw new EntidadeNaoEncontradaException("Id não encontrado" + id);
+            throw new EntidadeNaoEncontradaException("Id não encontrado " + id);
+        }
+
+    }
+
+    /**
+     * Nao foi colocado o @Transactional para poder ser capturada excessao vinda do banco de dados
+     * @param id
+     */
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            throw new EntidadeNaoEncontradaException("Id não encontrado " + id);
+        }catch (DataIntegrityViolationException e){
+            throw new EntidadeEmUsoException("Entidade com id" + id + "em uso");
+
         }
 
     }
